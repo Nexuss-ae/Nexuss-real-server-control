@@ -271,7 +271,27 @@ async def home(request: Request):
             guild = bot.get_guild(GUILD_ID) if GUILD_ID else None
             if guild:
                 roles = [{"id":str(r.id),"name":r.name,"color":str(r.color)} for r in sorted(guild.roles, key=lambda x:x.position, reverse=True) if not r.is_default() and not r.managed]
-            return templates.TemplateResponse("dashboard.html", {"request":request,"user":user,"guild_name":guild.name if guild else "Discord-Server","members":guild.member_count if guild else "—","roles":roles,"birthdays":birthdays,"logs":logs,"warnings_count":warnings_count,"settings":{"welcome_channel_id":setting("welcome_channel_id"),"birthday_channel_id":setting("birthday_channel_id"),"log_channel_id":setting("log_channel_id"),"welcome_message":setting("welcome_message"),"welcome_enabled":setting("welcome_enabled")}})
+            return templates.TemplateResponse(
+    request=request,
+    name="dashboard.html",
+    context={
+        "request": request,
+        "user": user,
+        "guild_name": guild.name if guild else "Discord-Server",
+        "members": guild.member_count if guild else "—",
+        "roles": roles,
+        "birthdays": birthdays,
+        "logs": logs,
+        "warnings_count": warnings_count,
+        "settings": {
+            "welcome_channel_id": setting("welcome_channel_id"),
+            "birthday_channel_id": setting("birthday_channel_id"),
+            "log_channel_id": setting("log_channel_id"),
+            "welcome_message": setting("welcome_message"),
+            "welcome_enabled": setting("welcome_enabled")
+        }
+    }
+)
         except HTTPException as e:
             return templates.TemplateResponse(
     request=request,
