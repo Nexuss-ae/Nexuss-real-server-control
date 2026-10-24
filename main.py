@@ -274,7 +274,11 @@ async def home(request: Request):
             return templates.TemplateResponse("dashboard.html", {"request":request,"user":user,"guild_name":guild.name if guild else "Discord-Server","members":guild.member_count if guild else "—","roles":roles,"birthdays":birthdays,"logs":logs,"warnings_count":warnings_count,"settings":{"welcome_channel_id":setting("welcome_channel_id"),"birthday_channel_id":setting("birthday_channel_id"),"log_channel_id":setting("log_channel_id"),"welcome_message":setting("welcome_message"),"welcome_enabled":setting("welcome_enabled")}})
         except HTTPException as e:
             return templates.TemplateResponse("login.html", {"request":request,"user":user,"error":e.detail}, status_code=e.status_code)
-    return templates.TemplateResponse("login.html", {"request":request,"user":None,"error":None})
+    return templates.TemplateResponse(
+    request=request,
+    name="login.html",
+    context={"request": request, "user": None, "error": None}
+)
 
 @app.get("/api/roles")
 async def api_roles(request: Request):
